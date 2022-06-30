@@ -1,0 +1,58 @@
+{
+  "policyType": "0",
+  "name": "DUMMY",
+  "isEnabled": true,
+  "policyPriority": 0,
+  "policyLabels": [],
+  "description": "DUMMY",
+  "isAuditEnabled": true,
+  "resources": {
+    "database": {
+      "values": [
+        "DUMMY"
+      ],
+      "isRecursive": false,
+      "isExcludes": false
+    },
+    "table": {
+      "values": [
+        "DUMMY"
+      ],
+      "isRecursive": false,
+      "isExcludes": false
+    },
+    "column": {
+      "values": [
+        "DUMMY"
+      ],
+      "isRecursive": false,
+      "isExcludes": false
+    }
+  },
+  "isDenyAllElse": false,
+  "policyItems": [
+    {
+      "groups": [
+        "DUMMY"
+      ],
+      "accesses": [
+        {
+          "type": "select",
+          "isAllowed": true
+        },
+        {
+          "type": "update",
+          "isAllowed": true
+        },
+        {
+          "type": "create",
+          "isAllowed": true
+        }
+      ]
+    }
+  ],
+  "allowExceptions": [],
+  "denyPolicyItems": [],
+  "denyExceptions": [],
+  "service": "DUMMY"
+}
