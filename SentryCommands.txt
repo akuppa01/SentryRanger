@@ -1,0 +1,42 @@
+GRANT SELECT (name) ON TABLE d1.nitish_column TO ROLE nitish_role_column_name;
+GRANT SELECT (wind_chill) ON TABLE usa.traffic_accidents TO ROLE traffic_role;
+
+GRANT SELECT (name) ON TABLE usa.nitish TO ROLE traffic_role;
+GRANT SELECT (id) ON TABLE webhcat_test_db_1655495520.abc_c TO ROLE abc_c_role;
+GRANT SELECT (sal) ON TABLE webhcat_test_db_1655495520.abc_c TO ROLE abc_c_role;
+GRANT SELECT (name) ON TABLE webhcat_test_db_1655495520.abc_c TO ROLE abc_c_role;
+
+
+
+GRANT ALL ON TABLE d1.t1 TO ROLE role_1_write_tb;
+
+GRANT ALL ON TABLE d2.t2 TO ROLE role_2_write_tb;
+
+GRANT ALL ON TABLE d3.t3 TO ROLE role_3_write_tb;
+
+GRANT select ON TABLE d1.t1 TO ROLE role_1_read_tb;
+
+GRANT select ON TABLE d2.t2 TO ROLE role_2_read_tb;
+
+GRANT select ON TABLE d3.t3 TO ROLE role_3_read_tb;
+
+
+GRANT ALL ON DATABASE usa TO ROLE amogh_usa_role;
+
+GRANT ALL ON DATABASE d1 TO ROLE role_1_write_db;
+
+GRANT ALL ON DATABASE d2 TO ROLE role_2_write_db;
+
+GRANT ALL ON DATABASE d3 TO ROLE role_3_write_db;
+
+GRANT select ON DATABASE d1 TO ROLE role_1_read;
+
+GRANT select ON DATABASE d2 TO ROLE role_2_read;
+
+GRANT select ON DATABASE d3 TO ROLE role_3_read;
+
+GRANT ALL ON SERVER server1 TO ROLE admin_role;
+
+GRANT ALL ON SERVER server1 TO ROLE server_role;
+
+GRANT ALL ON SERVER server1 TO ROLE prasoon_role;

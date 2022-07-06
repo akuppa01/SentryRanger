@@ -1,0 +1,58 @@
+{
+  "policyPriority": 0, 
+  "description": "create policy for column", 
+  "allowExceptions": [], 
+  "isEnabled": true, 
+  "isDenyAllElse": false, 
+  "service": "DUMMY", 
+  "policyType": "0", 
+  "denyExceptions": [], 
+  "denyPolicyItems": [], 
+  "policyItems": [
+    {
+      "groups": [
+        "BigData"
+      ], 
+      "accesses": [
+        {
+          "isAllowed": true, 
+          "type": "select"
+        }, 
+        {
+          "isAllowed": true, 
+          "type": "update"
+        }, 
+        {
+          "isAllowed": true, 
+          "type": "create"
+        }
+      ]
+    }
+  ], 
+  "policyLabels": [], 
+  "isAuditEnabled": true, 
+  "resources": {
+    "column": {
+      "isExcludes": false, 
+      "values": [
+        "name"
+      ], 
+      "isRecursive": false
+    }, 
+    "table": {
+      "isExcludes": false, 
+      "values": [
+        "nitish_column"
+      ], 
+      "isRecursive": false
+    }, 
+    "database": {
+      "isExcludes": false, 
+      "values": [
+        "d1"
+      ], 
+      "isRecursive": false
+    }
+  }, 
+  "name": "nitish_role_column_name"
+}
