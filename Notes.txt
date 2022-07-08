@@ -1,0 +1,5 @@
+
+OPTIMIZATION IDEAS:
+- store the most recent sentry command for a policy as an instance var in the
+  policy class; When you encounter the same policy name again, that compare both
+  the string's list form and find length or content differences.
