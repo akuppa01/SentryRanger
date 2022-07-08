@@ -1,0 +1,41 @@
+Use case 1:- 1 table to 1 role mapping 1 role 1 group 1 privilege
+create role role1;
+grant select (id) on table sentry_to_ranger2.new_test1 to role role1;
+grant select (name) on table sentry_to_ranger2.new_test1 to role role1;
+grant role role1 to group group1;
+
+
+1 role 1 table privileges 2 groups
+
+create role role2;            
+grant select (id) on table sentry_to_ranger2.new_test2 to role role2;
+grant select (name) on table sentry_to_ranger2.new_test2 to role role2;
+grant role role2 to group group2;
+grant role role2 to group group3;
+
+1 role 2 different table privileges 2 groups
+
+create role role4;
+grant select (id) on table sentry_to_ranger2.new_test2 to role role4;
+grant select (id) on table sentry_to_ranger1.new_test1 to role role4;
+grant role role4 to group group4;
+gratn role role5 to group group5;
+
+1 group having 3 privileges
+
+grant role role2 to group group6;
+grant role role3 to group group6;
+grant role role4 to group group6;
+
+
+
+create role role5;
+grant select (salary) on table sentry_to_ranger2.new_test4 to role role5;
+grant select (salary) on table sentry_to_ranger1.new_test5 to role role5;
+grant select (id) on table sentry_to_ranger2.new_test2 to role role5;
+grant select (name) on table sentry_to_ranger2.new_test2 to role role5;
+grant select (id) on table sentry_to_ranger2.new_test1 to role role5;
+grant select (name) on table sentry_to_ranger2.new_test1 to role role5;
+
+grant role role5 to group group7;
+grant role role5 to group group8;
