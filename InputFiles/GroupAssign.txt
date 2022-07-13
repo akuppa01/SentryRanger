@@ -19,7 +19,7 @@ create role role4;
 grant select (id) on table sentry_to_ranger2.new_test2 to role role4;
 grant select (id) on table sentry_to_ranger1.new_test1 to role role4;
 grant role role4 to group group4;
-gratn role role5 to group group5;
+grant role role5 to group group5;
 
 1 group having 3 privileges
 

@@ -1,1 +1,58 @@
-{"policyPriority": 0, "description": "DUMMY", "allowExceptions": [], "isEnabled": true, "isDenyAllElse": false, "service": "amoghadint_hive", "policyType": "0", "denyExceptions": [], "denyPolicyItems": [], "policyItems": [{"accesses": [{"isAllowed": true, "type": "select"}, {"isAllowed": true, "type": "update"}, {"isAllowed": true, "type": "create"}], "groups": ["DUMMY"]}], "policyLabels": [], "isAuditEnabled": true, "resources": {"column": {"isExcludes": false, "values": ["DUMMY"], "isRecursive": false}, "table": {"isExcludes": false, "values": ["DUMMY"], "isRecursive": false}, "database": {"isExcludes": false, "values": ["DUMMY"], "isRecursive": false}}, "name": "prasoonHiveNew1"}
+{
+    "policyPriority": 0,
+    "description": "DUMMY",
+    "allowExceptions": [],
+    "isEnabled": true,
+    "isDenyAllElse": false,
+    "service": "kkrkdonotd_hive",
+    "policyType": "0",
+    "denyExceptions": [],
+    "denyPolicyItems": [],
+    "policyItems": [
+      {
+        "accesses": [
+          {
+            "isAllowed": true,
+            "type": "select"
+          },
+          {
+            "isAllowed": true,
+            "type": "update"
+          },
+          {
+            "isAllowed": true,
+            "type": "create"
+          }
+        ],
+        "groups": [
+          "DUMMY"
+        ]
+      }
+    ],
+    "policyLabels": [],
+    "isAuditEnabled": true,
+    "resources": {
+      "column": {
+        "isExcludes": false,
+        "values": [
+          "DUMMY"
+        ],
+        "isRecursive": false
+      },
+      "table": {
+        "isExcludes": false,
+        "values": [
+          "DUMMY"
+        ],
+        "isRecursive": false
+      },
+      "database": {
+        "isExcludes": false,
+        "values": [
+          "DUMMY"
+        ],
+        "isRecursive": false
+      }
+    },
+    "name": "prasoonHiveNew1"
+  }

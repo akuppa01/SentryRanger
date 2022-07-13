@@ -3,3 +3,16 @@ OPTIMIZATION IDEAS:
 - store the most recent sentry command for a policy as an instance var in the
   policy class; When you encounter the same policy name again, that compare both
   the string's list form and find length or content differences.
+- track which roles have been assigned to what groups using dict
+
+
+
+- also add the "policy addition to ranger" functionality
+
+
+** jul 12 2022
+- initialize default values only if they've been mentioned
+
+potential solution to issue
+- 
+
