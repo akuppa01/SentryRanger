@@ -1,0 +1,64 @@
+{
+  "policyPriority": 0, 
+  "description": "['role_2_read', 'role_2_write_db']", 
+  "allowExceptions": [], 
+  "isEnabled": true, 
+  "isDenyAllElse": false, 
+  "service": "kkrkdonotd_hive", 
+  "policyType": "0", 
+  "denyExceptions": [], 
+  "denyPolicyItems": [], 
+  "policyItems": [
+    {
+      "groups": [
+        "group_2_read_db"
+      ], 
+      "accesses": [
+        {
+          "isAllowed": true, 
+          "type": "select"
+        }
+      ]
+    }, 
+    {
+      "groups": [
+        "group_2_write_db"
+      ], 
+      "accesses": [
+        {
+          "isAllowed": true, 
+          "type": "All"
+        }
+      ]
+    }
+  ], 
+  "policyLabels": [
+    "role_2_read", 
+    "role_2_write_db"
+  ], 
+  "isAuditEnabled": true, 
+  "resources": {
+    "column": {
+      "isExcludes": false, 
+      "values": [
+        "*"
+      ], 
+      "isRecursive": false
+    }, 
+    "table": {
+      "isExcludes": false, 
+      "values": [
+        "*"
+      ], 
+      "isRecursive": false
+    }, 
+    "database": {
+      "isExcludes": false, 
+      "values": [
+        "d2"
+      ], 
+      "isRecursive": false
+    }
+  }, 
+  "name": "d2.*.*"
+}

@@ -1,0 +1,52 @@
+{
+  "policyPriority": 0, 
+  "description": "['systest']", 
+  "allowExceptions": [], 
+  "isEnabled": true, 
+  "isDenyAllElse": false, 
+  "service": "kkrkdonotd_hive", 
+  "policyType": "0", 
+  "denyExceptions": [], 
+  "denyPolicyItems": [], 
+  "policyItems": [
+    {
+      "groups": [
+        "systest"
+      ], 
+      "accesses": [
+        {
+          "isAllowed": true, 
+          "type": "All"
+        }
+      ]
+    }
+  ], 
+  "policyLabels": [
+    "systest"
+  ], 
+  "isAuditEnabled": true, 
+  "resources": {
+    "column": {
+      "isExcludes": false, 
+      "values": [
+        "*"
+      ], 
+      "isRecursive": false
+    }, 
+    "table": {
+      "isExcludes": false, 
+      "values": [
+        "*"
+      ], 
+      "isRecursive": false
+    }, 
+    "database": {
+      "isExcludes": false, 
+      "values": [
+        "systest"
+      ], 
+      "isRecursive": false
+    }
+  }, 
+  "name": "systest.*.*"
+}

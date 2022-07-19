@@ -1,0 +1,64 @@
+{
+  "policyPriority": 0, 
+  "description": "['role_3_read_tb', 'role_3_write_tb']", 
+  "allowExceptions": [], 
+  "isEnabled": true, 
+  "isDenyAllElse": false, 
+  "service": "kkrkdonotd_hive", 
+  "policyType": "0", 
+  "denyExceptions": [], 
+  "denyPolicyItems": [], 
+  "policyItems": [
+    {
+      "groups": [
+        "group_3_read_tb"
+      ], 
+      "accesses": [
+        {
+          "isAllowed": true, 
+          "type": "select"
+        }
+      ]
+    }, 
+    {
+      "groups": [
+        "group_3_write_tb"
+      ], 
+      "accesses": [
+        {
+          "isAllowed": true, 
+          "type": "All"
+        }
+      ]
+    }
+  ], 
+  "policyLabels": [
+    "role_3_read_tb", 
+    "role_3_write_tb"
+  ], 
+  "isAuditEnabled": true, 
+  "resources": {
+    "column": {
+      "isExcludes": false, 
+      "values": [
+        "*"
+      ], 
+      "isRecursive": false
+    }, 
+    "table": {
+      "isExcludes": false, 
+      "values": [
+        "t3"
+      ], 
+      "isRecursive": false
+    }, 
+    "database": {
+      "isExcludes": false, 
+      "values": [
+        "d3"
+      ], 
+      "isRecursive": false
+    }
+  }, 
+  "name": "d3.t3.*"
+}

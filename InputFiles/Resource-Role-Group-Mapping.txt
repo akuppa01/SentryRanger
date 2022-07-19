@@ -1,0 +1,64 @@
+Resource -> Role -> Group:
+
+d1.t1
+	all -> role_1_write_tb -> (group_1_write_tb)
+	sel -> role_1_read_tb -> (group_1_read_tb)
+
+d2.t2
+	all -> role_2_write_tb -> (group_2_write_tb)
+	sel -> role_2_read_tb -> (group_2_read_tb)
+
+d3.t3
+	all -> role_3_write_tb -> (group_3_write_tb)
+	sel -> role_3_read_tb -> (group_3_read_tb)
+
+webhcat_test_db_1655495520.webhcat_test_db_1655495520
+	sel -> r1 -> (g1,g2)
+
+usa
+	all -> amogh_usa_role
+
+d1
+	all -> role_1_write_db -> (group_1_write_db)
+	sel -> role_1_read -> (group_1_read_db)
+
+d2
+	all -> role_2_write_db -> (group_2_write_db)
+	sel -> role_2_read -> (group_2_read_db)
+
+d3
+	all -> role_3_write_db -> (group_3_write_db)
+	sel -> role_3_read -> -> (group_3_read_db)
+
+systest
+	all -> systest -> (systest)
+
+autogen_pii
+	sel -> systest_autogen
+
+server1
+	all -> admin_role -> (sentryadmin)
+		-> prasoon_role -> (prasoon)
+		-> server_role -> (hive)
+
+d1.nitish_column
+	sel (id) -> nitish_role_column_id -> (nitish_group)
+	sel (name) -> nitish_role_column_name -> (nitish_group_name)
+
+usa.traffic_accidents
+	sel (wind_chill) -> traffic_role -> (nitish_new)
+
+webhcat_test_db_1655495520.abc_c
+	sel (id) -> abc_c_role -> (group1,group2)
+	sel (sal) -> abc_c_role -> (group1,group2)
+	sel (name) -> abc_c_role -> (group1,group2)
+
+/user/hive/warehouse/d1.db
+	all -> role_1_read
+		-> role_1_write_db
+/user/hive/warehouse/d2.db
+	all -> role_2_read
+		-> role_2_write_db
+/user/hive/warehouse/d3.db
+	all -> role_3_read
+		-> role_3_write_db

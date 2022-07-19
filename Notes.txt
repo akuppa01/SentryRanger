@@ -7,12 +7,144 @@ OPTIMIZATION IDEAS:
 
 
 
-- also add the "policy addition to ranger" functionality
+
+next steps (July 13 5:54pm)
+    - maybe in __main__
+    - loop through resources dict
+      -   loop through each of the resource's labels
+        -    if resourceStr's set() is empty: 
+        -       then move on (continue)
+        -    else:
+        -       loop through policy set:
+        -           collect all the unique groups and permissions and store in the ResourceStr class
+        -           create Resource's json and put in TempFiles
+        -           deploy json to Ranger
+
+  #ideas
+  # - maybe create a ResourceStr class with string resourceStr
+
+  #notes
+  # - if Ranger is empty when we run my script, we would not need UPDATE_COMMAND, CREATE_COMMAND would be enough
+  # - initialize default values only if they've been mentioned
+    - add roles to policy labels and description
+    - can add a role to two diff resources (policies)
 
 
-** jul 12 2022
-- initialize default values only if they've been mentioned
 
-potential solution to issue
-- 
+Brainstorming:
 
+grant role adi to group g1;
+grant role nitish to group g2;
+GRANT select ON TABLE d1.t1 TO ROLE adi;
+GRANT ALL ON TABLE d1.t1 TO ROLE nitish;
+grant role adi to group g3;
+GRANT select ON TABLE d2.t2 TO ROLE adi;
+/////
+#Roles
+adi => groups = {g1, g3}
+nitish => groups = {g2}
+
+////
+#resources
+d1.t1 => {'adi'   : select}
+         {'nitish': all }
+d2.t2 => {'adi'   : select}
+      
+
+
+policy name = "d1.t1"
+  resources = {db = d1, tb = t1}
+  policy labels = {"roleB","roleA"}
+  permissions = {"All", "select"}
+  groups = {"g1", "g2}
+
+
+grant role adi to group g1;
+grant role adi to group g2;
+
+GRANT SELECT ON TABLE d1.t1 TO ROLE adi;
+GRANT ALL ON TABLE d2.t2 TO ROLE adi;
+
+
+
+
+policy name = "d1.t1"
+  resources = {db = d1, tb = t1}
+  description = ""
+  permissions = ""
+  groups = ""
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   adi_all --> group1 d1.t1
+adi  ---> group1
+   adi_select  --> group1 d2.t2
+
+adi to group group1
+
+
+sentry
+group1--> adi--> s(t1)+a(t2)
+
+
+grant role nitish to group n1;
+
++++++++++++++++++++++++++++++++++++++++++++++++
+create table test1(id int,name string);
+create table test2(id int,name string);
+
+create role r1;
+create role r2;
+
+GRANT SELECT (id) ON TABLE test1 TO ROLE r1;
+GRANT SELECT (id) ON TABLE test2 TO ROLE r1;
+grant select(name) on table test1 to ROLE r1;
+
+
+grant role r1 to group g1;
+
+grant role r1 to group g2;
+
+
+
+grant select
+
+
+
+GRANT select ON TABLE d1.t1 TO ROLE adi;
+GRANT ALL ON TABLE d1.t1 TO ROLE adi;
+
+
+
+Latest TODO:
+ - change up second if statement that handles role assigning to groups
+ - add code to main method
+ - rewrite the json creation and ranger updation methods
+
+
+TODO Friday:
+  - //fix the url case
+
+  - //for server cases throw warning and skip past
+  - ranger update function
+
+  - //fix argPermission error
+  - //fix the multiple same permissions in json error
+
+
+  CURL commands:
+
+  d1.t1.*
+curl -ivk  -u 'admin:OracleTeamUSA!123' -X POST -H "Content-Type: application/json" -d @"d1.*.*".json https://129.80.66.56:6182/service/public/v2/api/policy/
