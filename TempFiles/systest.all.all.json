@@ -1,6 +1,6 @@
 {
   "policyPriority": 0, 
-  "description": "['role_2_read_tb', 'role_2_write_tb']", 
+  "description": "['systest']", 
   "allowExceptions": [], 
   "isEnabled": true, 
   "isDenyAllElse": false, 
@@ -11,18 +11,7 @@
   "policyItems": [
     {
       "groups": [
-        "group_2_read_tb"
-      ], 
-      "accesses": [
-        {
-          "isAllowed": true, 
-          "type": "select"
-        }
-      ]
-    }, 
-    {
-      "groups": [
-        "group_2_write_tb"
+        "systest"
       ], 
       "accesses": [
         {
@@ -33,8 +22,7 @@
     }
   ], 
   "policyLabels": [
-    "role_2_read_tb", 
-    "role_2_write_tb"
+    "systest"
   ], 
   "isAuditEnabled": true, 
   "resources": {
@@ -48,17 +36,17 @@
     "table": {
       "isExcludes": false, 
       "values": [
-        "t2"
+        "*"
       ], 
       "isRecursive": false
     }, 
     "database": {
       "isExcludes": false, 
       "values": [
-        "d2"
+        "systest"
       ], 
       "isRecursive": false
     }
   }, 
-  "name": "d2.t2.*"
+  "name": "systest.all.all"
 }

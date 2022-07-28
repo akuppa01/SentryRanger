@@ -1,6 +1,6 @@
 {
   "policyPriority": 0, 
-  "description": "['role_3_read', 'role_3_write_db']", 
+  "description": "['role_3_read_tb', 'role_3_write_tb']", 
   "allowExceptions": [], 
   "isEnabled": true, 
   "isDenyAllElse": false, 
@@ -11,7 +11,7 @@
   "policyItems": [
     {
       "groups": [
-        "group_3_read_db"
+        "group_3_read_tb"
       ], 
       "accesses": [
         {
@@ -22,7 +22,7 @@
     }, 
     {
       "groups": [
-        "group_3_write_db"
+        "group_3_write_tb"
       ], 
       "accesses": [
         {
@@ -33,8 +33,8 @@
     }
   ], 
   "policyLabels": [
-    "role_3_read", 
-    "role_3_write_db"
+    "role_3_read_tb", 
+    "role_3_write_tb"
   ], 
   "isAuditEnabled": true, 
   "resources": {
@@ -48,7 +48,7 @@
     "table": {
       "isExcludes": false, 
       "values": [
-        "*"
+        "t3"
       ], 
       "isRecursive": false
     }, 
@@ -60,5 +60,5 @@
       "isRecursive": false
     }
   }, 
-  "name": "d3.*.*"
+  "name": "d3.t3.all"
 }

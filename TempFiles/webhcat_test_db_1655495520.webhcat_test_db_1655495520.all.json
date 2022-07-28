@@ -1,6 +1,6 @@
 {
   "policyPriority": 0, 
-  "description": "['role_2_read', 'role_2_write_db']", 
+  "description": "['r1']", 
   "allowExceptions": [], 
   "isEnabled": true, 
   "isDenyAllElse": false, 
@@ -11,7 +11,8 @@
   "policyItems": [
     {
       "groups": [
-        "group_2_read_db"
+        "g2", 
+        "g1"
       ], 
       "accesses": [
         {
@@ -19,22 +20,10 @@
           "type": "select"
         }
       ]
-    }, 
-    {
-      "groups": [
-        "group_2_write_db"
-      ], 
-      "accesses": [
-        {
-          "isAllowed": true, 
-          "type": "All"
-        }
-      ]
     }
   ], 
   "policyLabels": [
-    "role_2_read", 
-    "role_2_write_db"
+    "r1"
   ], 
   "isAuditEnabled": true, 
   "resources": {
@@ -48,17 +37,17 @@
     "table": {
       "isExcludes": false, 
       "values": [
-        "*"
+        "webhcat_test_db_1655495520"
       ], 
       "isRecursive": false
     }, 
     "database": {
       "isExcludes": false, 
       "values": [
-        "d2"
+        "webhcat_test_db_1655495520"
       ], 
       "isRecursive": false
     }
   }, 
-  "name": "d2.*.*"
+  "name": "webhcat_test_db_1655495520.webhcat_test_db_1655495520.all"
 }

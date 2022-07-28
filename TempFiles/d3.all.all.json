@@ -1,6 +1,6 @@
 {
   "policyPriority": 0, 
-  "description": "['systest']", 
+  "description": "['role_3_read', 'role_3_write_db']", 
   "allowExceptions": [], 
   "isEnabled": true, 
   "isDenyAllElse": false, 
@@ -11,7 +11,18 @@
   "policyItems": [
     {
       "groups": [
-        "systest"
+        "group_3_read_db"
+      ], 
+      "accesses": [
+        {
+          "isAllowed": true, 
+          "type": "select"
+        }
+      ]
+    }, 
+    {
+      "groups": [
+        "group_3_write_db"
       ], 
       "accesses": [
         {
@@ -22,7 +33,8 @@
     }
   ], 
   "policyLabels": [
-    "systest"
+    "role_3_read", 
+    "role_3_write_db"
   ], 
   "isAuditEnabled": true, 
   "resources": {
@@ -43,10 +55,10 @@
     "database": {
       "isExcludes": false, 
       "values": [
-        "systest"
+        "d3"
       ], 
       "isRecursive": false
     }
   }, 
-  "name": "systest.*.*"
+  "name": "d3.all.all"
 }
