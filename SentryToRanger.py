@@ -293,16 +293,17 @@ def get_serviceName():
 
     print("in get_service")
     # print("foo",RANGER_ADMIN_HOST, RANGER_ADMIN_USERNAME, RANGER_ADMIN_PASSWORD)
-    GET_COMMAND = "curl -ivk -u '{}:{}' -H \"Content-Type: application/json\" -H \"Accept: application/json\" -X GET https://{}/service/public/v2/api/service/?serviceType=hive | jq .[].displayName".format(RANGER_ADMIN_USERNAME, RANGER_ADMIN_PASSWORD, RANGER_ADMIN_HOST)
+    GET_COMMAND = "curl -s -k -u '{}:{}' -H \"Content-Type: application/json\" -H \"Accept: application/json\" -X GET https://{}/service/public/v2/api/service/?serviceType=hive".format(RANGER_ADMIN_USERNAME, RANGER_ADMIN_PASSWORD, RANGER_ADMIN_HOST)
     # print(GET_COMMAND)
     output = os.popen(GET_COMMAND).read()
-    # print(output)
+    # print("check before")
+    print(output)
+    # print("check after")
     # print()
     # print(output.strip())
-    # res = json.loads(output[1:-1])['name']
-    # print(res)
-    # SERVICE_NAME = output
-    SERVICE_NAME = "kkrkdonotd_hive"
+    res = json.loads(output)[0]['name']
+    SERVICE_NAME = res
+    # SERVICE_NAME = "kkrkdonotd_hive"
 
 def validate_file(f):
 #     print(type(f))
