@@ -2,11 +2,14 @@ import argparse
 import json
 import os
 import logging
+from getpass import getpass
 from turtle import update
 
-
-RANGER_ADMIN_HOST = '129.80.66.56:6182'
-SERVICE_NAME = "kkrkdonotd_hive"
+SERVICE_NAME = None
+RANGER_ADMIN_HOST = None
+RANGER_ADMIN_USERNAME = None
+RANGER_ADMIN_PASSWORD = None
+INPUT_FILE = None
 
 roles = {}     # dict of {"role name" : role object}
 resources = {} # dict of {"resource name" : resource object}
@@ -22,16 +25,16 @@ policyName, serviceName, database/URI name, 1 permission, 1 group
 class Resource:
     """Resource class stores key information for each policy"""
     def __init__(self): 
-        self.resourceStr = "DUMMY"
+        self.resourceStr = None
         self.columnName = "*"
         self.tableName = "*"
-        self.databaseName = "*"
-        self.uriName = "not set"
+        self.databaseName = None
+        self.uriName = None
         self.serviceName =  SERVICE_NAME ## TODO: change it to parameter
                                          ## TODO: what to do if a command asks for server change
         self.isURI = False
         self.description = "description TBD"
-        self.labels = {}  # { 'role name' : set('select' , 'All') ,}
+        self.labels = {}  # { 'role name' : set('select' , 'All') }
 
 
 
@@ -67,7 +70,7 @@ def create_policy_json(policy):
     policyLabels = res[1]
 
     if len(policyLabels) == 0:
-        logging.error("no groups assigned to any of the roles in this resource => " + policy.resourceStr)
+        logging.warning("no groups assigned to any of the roles in this resource => " + policy.resourceStr)
         errorResources[policy.resourceStr] = policy
         return None
     
@@ -76,7 +79,7 @@ def create_policy_json(policy):
     jsonData.update( {"service": policy.serviceName, } )
     jsonData.update( {"description": policy.description, } )
 
-    if policy.uriName != "not set": # this policy is for a URL
+    if policy.uriName != None: # this policy is for a URL
         jsonData.update( {
                                 "resources": {
                                     "url": {
@@ -122,7 +125,7 @@ def getPolicyItems(policy):
     policyItems = []
     for role in policy.labels:
         if len(roles[role].groups) != 0:
-            policyLabels.append(role)
+            policyLabels.append("(Sentry-Migrated)-"+role)
             accesses = []
             for permission in policy.labels[role]:
                 accesses.append( {
@@ -143,16 +146,11 @@ def parse_arg(arg):
 
     arr = arg.strip().lower().split(" ")
 
-    # print("\n")
-    # print(arr)
-    # print("\n")
     try:
         if len(arr) == 0 or len(arr) == 1: # check if arg is an empty line 
-            # print("check A")
             return
         
         if arg.rstrip()[-1] != ';': # check if arg is a comment
-            # print("check B", arg.rstrip()[-1])
             return
         
         
@@ -162,7 +160,6 @@ def parse_arg(arg):
             return
 
         if arr[0] == "grant" and arr[1] == 'role': # assigning policy to a group
-            # print("check 2") 
             currentRole.roleName = arr[2]
             group = arr[-1].split(';')[0]
           
@@ -176,7 +173,6 @@ def parse_arg(arg):
 
         else: # normal grant command
             ## TODO: add precon / check for spelling error
-            # print("check 3")
             currentResource = Resource()
             argPermission = parse_Resource(currentResource, currentRole, arr)
             if argPermission != None:
@@ -184,13 +180,11 @@ def parse_arg(arg):
             else:
                 logging.warning("encountered a SERVER related command")
 
-        # print("check end")
     except Exception as error:
         logging.error(error)
     
 
 def parse_Resource(currentResource, currentRole, arr):
-    
     
     argRole = arr[-1].split(';')[0] # remove semicolons from name
     currentRole.roleName = argRole
@@ -200,6 +194,8 @@ def parse_Resource(currentResource, currentRole, arr):
     ## parsing permissions 
     if arr[1] == 'select':
         argPermission = 'select'
+    elif arr[1] == 'insert':
+        argPermission = 'update'
     else: # handles all other permissions
         argPermission = arr[1].capitalize()
 
@@ -208,7 +204,6 @@ def parse_Resource(currentResource, currentRole, arr):
 
     ## parsing col,tb,db,server
     if arr[2][0] == "(" and arr[3] == "on" and arr[4] == "table": # case[1] -> policy for column
-        # print("check 1")
         currentRole.roleFor = "column"
         currentResource.columnName = arr[2][1:-1] # remove parentheses
         db_tb = arr[5].split(".")
@@ -216,7 +211,6 @@ def parse_Resource(currentResource, currentRole, arr):
         currentResource.tableName = db_tb[1]
 
     elif arr[2] == "on":
-        # print("check 2")
         if arr[3] == "table": # case[2] -> policy for table
             currentRole.roleFor = "table"
             db_tb = arr[4].split(".")
@@ -242,23 +236,20 @@ def parse_Resource(currentResource, currentRole, arr):
 
             
 def createResource(currentResource, currentRole, argPermission):
+    #resource name creation
     resourceStr = "{}.{}.{}".format(currentResource.databaseName,currentResource.tableName,currentResource.columnName)
     resourceStr = resourceStr.replace('*','all')
-    # print(resourceStr)
-    # print(currentRole.roleFor)
+
     if currentRole.roleFor == "uri":
         resourceStr = currentResource.uriName.replace("/", "-")[1:]
         currentResource.isURI = True
-        # print("nai")
-    # print("check 4") 
+
     currentResource.resourceStr = resourceStr
     roleName = currentRole.roleName
 
-    #### by this point, labels have been updated
     if resources.get(resourceStr) != None: # existing resource
-        # print("check 4.1")
+
         origResource = resources[resourceStr]
-        # { 'role name' : [ 'select' , 'All' ] }
         if origResource.labels.get(roleName) != None: # role exists in original resource's label
             origResource.labels[roleName].add(argPermission)
         else: # new role
@@ -268,91 +259,136 @@ def createResource(currentResource, currentRole, argPermission):
 
     resources[resourceStr] = currentResource # line needed for both new and existing resources
 
-
-    # goes to top of method
-    
-    # print("*** policyName",policyName, policies.get(policyName) != None)
-
     if roles.get(roleName) == None: # new role
-        # print("check 4.2")        
         roles[roleName] = currentRole
     
 
 # Get command line arguments and print help
-def get_arguments(INPUT_FILE):
-    # INFO: to read stuff from command line, refer to Prasoon's original code and use argparse module
+def get_arguments():
+    # INFO: to read from command line, refer to Prasoon's original code and use argparse module
     args = []
     with open(INPUT_FILE) as f: # reading input file with commands
         args = f.readlines()
     f.close()
     
-    # aaa
     for i in range(0,len(args)): # looping through each command
-        arg = args[i]
-        # print("\n")
-        # print('arg {}: {}'.format(i+1,arg))    
+        arg = args[i]    
         parse_arg(arg)
-
-    # parse_arg(args[0])
 
 
 def updateRanger(policy):
     policyName = policy.resourceStr
-    # policyName = "role_1_write_db"
     policyJSONname = '{}.json'.format(policyName)
-    # policyJSONname = "role_1_read_policy.json"
-    # The command you want to execute   
-    # cmd = ['curl', '-ivk', '-u', "'admin:OracleTeamUSA!123'", '-H', '"Content-Type: application/json"', '-X', 'GET', '"https://129.80.66.56:6182/service/public/v2/api/policy?policyName=role_1_read"']
-    # temp = subprocess.Popen(cmd)#, stdout = subprocess.PIPE) 
-    # GET_COMMAND = "curl -ivk  -u 'admin:OracleTeamUSA!123' -H \"Content-Type: application/json\" -X GET \"https://129.80.66.56:6182/service/public/v2/api/policy?policyName={}\"".format(policyName)
-    # print("updateRanger; check 1")
+
     try:
-        # UPDATE_COMMAND = "curl -ivk -u 'admin:OracleTeamUSA!123' -X PUT -H \"Content-Type: application/json\" -d @TempFiles/" + policyJSONname + " https://" + RANGER_ADMIN_HOST + "/service/public/v2/api/service/{\"" + policy.serviceName + "\"}/policy/{\"" + policyName + "\"}/"
-        # print(UPDATE_COMMAND)
-        # output = os.popen(GET_COMMAND).read()
-        # gg = output.split()
-        # print("updateRanger; check 2")
-        # if (gg[-2]=='Not' and gg[-1]=='found'): #CREATE command
-        # if (gg[-1] == "[]"):
-        # print("createRanger; check 3", policy.resourceStr)
-        CREATE_COMMAND = "curl -ivk  -u 'admin:OracleTeamUSA!123' -X POST -H \"Content-Type: application/json\" -d @TempFiles/\"{}\" https://{}/service/public/v2/api/policy/".format(policyJSONname, RANGER_ADMIN_HOST)    
+        CREATE_COMMAND = "curl -ivk  -u '{}:{}' -X POST -H \"Content-Type: application/json\" -d @TempFiles/\"{}\" https://{}/service/public/v2/api/policy/".format(RANGER_ADMIN_USERNAME, RANGER_ADMIN_PASSWORD, policyJSONname, RANGER_ADMIN_HOST)    
         output = os.popen(CREATE_COMMAND).read()
-        # print(CREATE_COMMAND)
 
-            # gg = output.split()
-
-        # TODO: add another if statement to check that policy was added successfully
-        # print("-------")
-        # print(gg)
-        # print(gg[-2],gg[-1])
     except Exception as error:
-        print("Ranger Policy creation ERROR :", error)
+        logging.error("ranger policy creation unsuccessful for " + policy.resourceStr)
 
 
-    
+def get_serviceName():
+    global SERVICE_NAME
 
-# Start
+    print("in get_service")
+    # print("foo",RANGER_ADMIN_HOST, RANGER_ADMIN_USERNAME, RANGER_ADMIN_PASSWORD)
+    GET_COMMAND = "curl -ivk -u '{}:{}' -H \"Content-Type: application/json\" -H \"Accept: application/json\" -X GET https://{}/service/public/v2/api/service/?serviceType=hive | jq .[].displayName".format(RANGER_ADMIN_USERNAME, RANGER_ADMIN_PASSWORD, RANGER_ADMIN_HOST)
+    # print(GET_COMMAND)
+    output = os.popen(GET_COMMAND).read()
+    # print(output)
+    # print()
+    # print(output.strip())
+    # res = json.loads(output[1:-1])['name']
+    # print(res)
+    # SERVICE_NAME = output
+    SERVICE_NAME = "kkrkdonotd_hive"
+
+def validate_file(f):
+#     print(type(f))
+      curr = f
+      while True:
+            fileExists = os.path.exists(curr)
+            if not fileExists :
+                print("{} does not exist".format(curr))
+                curr = input('Please enter a different filepath or type "default" to continue with default Input File: ')
+                if curr == "default":
+                    break
+            else:
+                break
+      return curr
+
+def get_inputFile(): ## in future, connect this function with sentry side; also check to make sure the provided file path leads to a Sentry/SQL test file
+    global INPUT_FILE
+
+    parser = argparse.ArgumentParser(description="Read file from Command line.")
+    parser.add_argument("-i", "--input", dest="filename", required=False, type=validate_file,
+                        help="input file", metavar="FILE")
+    args = parser.parse_args()
+    # print(args)
+    INPUT_FILE = args.filename
+    if args.filename == "default" or INPUT_FILE == None:
+        INPUT_FILE = 'InputFiles/scaj-INPUT-FILE.txt' ## in future, change to sentry side created input file
+    print("Reading from INPUT FILE =>", INPUT_FILE,"\n")
+
+def setup():
+    global RANGER_ADMIN_HOST
+    global RANGER_ADMIN_USERNAME 
+    global RANGER_ADMIN_PASSWORD
+
+    host = None
+    username = None
+    password = None
+    loggedIn = False
+
+    os.popen("rm -f TempFiles/*.json").read()
+    for i in range(3):
+        host = input("Enter the public IP of RANGER_ADMIN_HOST: ")
+        username = input('Username: ')
+        password = getpass(prompt='Password: ', stream=None)
+        
+        # print("check 1")
+        GET_COMMAND = "curl -v -k -u '{}:{}' -H \"Content-Type: application/json\" -H \"Accept: application/json\" -X GET https://{}/service/public/v2/api/service/".format(username, password, host)
+        output = os.popen(GET_COMMAND).read()
+        # print("check 2")
+        ## Note: these are a bit hard coded, might need to change later
+        if '{"statusCode":401,"msgDesc":"Authentication Failed"}' in output: # wrong user/pass
+            print("Incorrect host or username or password. Please try again!\n")
+        elif '"displayName"' in output: #login successful
+            print("\n\nCongrats, login successful!\n")
+            loggedIn = True
+            break
+        # print(type(output))
+        # print(host, username, password)
+        # print(output)
+    if loggedIn:
+        RANGER_ADMIN_HOST = host
+        RANGER_ADMIN_USERNAME = username
+        RANGER_ADMIN_PASSWORD = password
+    else:
+        print("\n\nSorry, You ran out of login attempts")
+
+    return loggedIn
+
+        
+"""
+129.80.66.56:6182
+admin
+OracleTeamUSA!123
+"""
 if __name__ == "__main__":
-    INPUT_FILE = 'InputFiles/scaj-INPUT-FILE.txt'
+ 
+    loggedIn = setup() # login related info
+    if loggedIn:
+        get_inputFile()
 
-    get_arguments(INPUT_FILE)
-    # print("roles len", len(roles))
-    # print("roles =", roles.keys())
-    # for i in roles:
-    #     print(i, roles[i].groups)
-    # print("")
-    # print("resources =")
-    # i = "d1.nitish_column.id"
-    for i in resources:
-        # print(i, resources[i].labels)
-        cpj = create_policy_json(resources[i])
-        # if cpj:
-        #     updateRanger(resources[i])
+        get_serviceName()
+        # print(RANGER_ADMIN_HOST,RANGER_ADMIN_PASSWORD,RANGER_ADMIN_USERNAME, INPUT_FILE, SERVICE_NAME)
+        get_arguments()
 
-
-    # print("\n")
-    # print(errorResources.keys())
-    # for i in policies:
-    
-    # print(policies["admin_role"].policyName)
-    
+        for i in resources:
+            cpj = create_policy_json(resources[i])
+            if cpj: #json file successfully created for this resource
+                updateRanger(resources[i])
+                pass
+        pass
