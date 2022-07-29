@@ -384,11 +384,11 @@ if __name__ == "__main__":
 
         get_serviceName()
         # print(RANGER_ADMIN_HOST,RANGER_ADMIN_PASSWORD,RANGER_ADMIN_USERNAME, INPUT_FILE, SERVICE_NAME)
-        get_arguments()
+        # get_arguments()
 
-        for i in resources:
-            cpj = create_policy_json(resources[i])
-            if cpj: #json file successfully created for this resource
-                updateRanger(resources[i])
-                pass
+        # for i in resources:
+        #     cpj = create_policy_json(resources[i])
+        #     if cpj: #json file successfully created for this resource
+        #         updateRanger(resources[i])
+        #         pass
         pass
