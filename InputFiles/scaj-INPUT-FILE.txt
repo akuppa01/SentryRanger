@@ -81,4 +81,5 @@ GRANT ALL ON URI "/user/hive/warehouse/d2.db" TO ROLE role_2_read;
 GRANT ALL ON URI "/user/hive/warehouse/d2.db" TO ROLE role_2_write_db;
 GRANT ALL ON URI "/user/hive/warehouse/d3.db" TO ROLE role_3_read;
 GRANT ALL ON URI "/user/hive/warehouse/d3.db" TO ROLE role_3_write_db;
-grant insert on table xxxx
+GRANT INSERT ON TABLE d5.t5 TO ROLE adi
+GRANT ROLE adi TO GROUP xyz;

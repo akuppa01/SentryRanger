@@ -2,6 +2,7 @@ import argparse
 import json
 import os
 import logging
+import subprocess
 from getpass import getpass
 from turtle import update
 
@@ -281,7 +282,7 @@ def updateRanger(policy):
     policyJSONname = '{}.json'.format(policyName)
 
     try:
-        CREATE_COMMAND = "curl -ivk  -u '{}:{}' -X POST -H \"Content-Type: application/json\" -d @TempFiles/\"{}\" https://{}/service/public/v2/api/policy/".format(RANGER_ADMIN_USERNAME, RANGER_ADMIN_PASSWORD, policyJSONname, RANGER_ADMIN_HOST)    
+        CREATE_COMMAND = "curl -s -k -u '{}:{}' -X POST -H \"Content-Type: application/json\" -d @TempFiles/\"{}\" https://{}/service/public/v2/api/policy/".format(RANGER_ADMIN_USERNAME, RANGER_ADMIN_PASSWORD, policyJSONname, RANGER_ADMIN_HOST)    
         output = os.popen(CREATE_COMMAND).read()
 
     except Exception as error:
@@ -297,7 +298,7 @@ def get_serviceName():
     # print(GET_COMMAND)
     output = os.popen(GET_COMMAND).read()
     # print("check before")
-    print(output)
+    # print(output)
     # print("check after")
     # print()
     # print(output.strip())
@@ -349,11 +350,15 @@ def setup():
         password = getpass(prompt='Password: ', stream=None)
         
         # print("check 1")
-        GET_COMMAND = "curl -v -k -u '{}:{}' -H \"Content-Type: application/json\" -H \"Accept: application/json\" -X GET https://{}/service/public/v2/api/service/".format(username, password, host)
-        output = os.popen(GET_COMMAND).read()
+        GET_COMMAND = "curl -v --connect-timeout 5 -k -u '{}:{}' -H \"Content-Type: application/json\" -H \"Accept: application/json\" -X GET https://{}/service/public/v2/api/service/".format(username, password, host)
+        output = os.popen(GET_COMMAND)
         # print("check 2")
+
+        # print(output)
         ## Note: these are a bit hard coded, might need to change later
-        if '{"statusCode":401,"msgDesc":"Authentication Failed"}' in output: # wrong user/pass
+        if "Connection timed out" in output:
+            print("Could not connect to host. Please check if host is reachable!\n")
+        elif '{"statusCode":401,"msgDesc":"Authentication Failed"}' in output: # wrong user/pass
             print("Incorrect host or username or password. Please try again!\n")
         elif '"displayName"' in output: #login successful
             print("\n\nCongrats, login successful!\n")
@@ -385,11 +390,12 @@ if __name__ == "__main__":
 
         get_serviceName()
         # print(RANGER_ADMIN_HOST,RANGER_ADMIN_PASSWORD,RANGER_ADMIN_USERNAME, INPUT_FILE, SERVICE_NAME)
-        # get_arguments()
+        get_arguments()
 
-        # for i in resources:
-        #     cpj = create_policy_json(resources[i])
-        #     if cpj: #json file successfully created for this resource
-        #         updateRanger(resources[i])
-        #         pass
+        print(resources)
+        for i in resources:
+            cpj = create_policy_json(resources[i])
+            if cpj: #json file successfully created for this resource
+                updateRanger(resources[i])
+                pass
         pass

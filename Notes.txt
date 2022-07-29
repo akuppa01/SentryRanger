@@ -224,3 +224,10 @@ Questions:
 
 curl -ivk  -u 'admin:OracleTeamUSA!123' -H "Content-Type: application/json" -X GET "https://129.80.66.56:6182/service/public/v2/api/service/?serviceType=hive"
 /?serviceType=hive
+
+
+
+TODO:
+
+- use urllib, requests, or subprocess instead of os module
+- 
