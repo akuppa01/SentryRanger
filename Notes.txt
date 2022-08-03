@@ -138,7 +138,7 @@ TODO Friday:
   - //fix the url case
 
   - //for server cases throw warning and skip past
-  - ranger update function
+  - //ranger update function
 
   - //fix argPermission error
   - //fix the multiple same permissions in json error
@@ -152,7 +152,7 @@ curl -ivk  -u 'admin:OracleTeamUSA!123' -X POST -H "Content-Type: application/js
 
 
 
-Questions:
+//Questions:
 - how to display resourceStr (policy name) for URI case (should I still do [0:3]??)
 - what if the short version of resourceStr is not unique 
     d1.adi.india 
@@ -163,7 +163,7 @@ Questions:
 
 
 Tasks:
-- add insert case
+- //add insert case
 
 
 service/public/v2/api/service
@@ -173,29 +173,29 @@ curl -ivk  -u 'admin:OracleTeamUSA!123' -H "Content-Type: application/json" -X G
 
 
 TODO Jul 28:
-- implement arg parse to read stuff from terminal
-    - collect Ranger_admin_host public ip ('129.80.66.56'; everything before the colon) 
-    - not needed //collect cluster name and assign to serviceName = clusterName + "_hive"
-    - collect username and password(keep pass invisible) for ranger admin
-    - collect input file and assign to internal param
-    - maybe provide -h for help with basic help info
+- //implement arg parse to read stuff from terminal
+    - //collect Ranger_admin_host public ip ('129.80.66.56'; everything before the colon) 
+    - //not needed //collect cluster name and assign to serviceName = clusterName + "_hive"
+    - //collect username and password(keep pass invisible) for ranger admin
+    - //collect input file and assign to internal param
+    - //maybe provide -h for help with basic help info
 
-- add the insert permission functionality (convert to update in ranger side)
-- add a logger file (new one for every run)
-- maybe make idempotent
+- //add the insert permission functionality (convert to update in ranger side)
+- //add a logger file (new one for every run)
+- //maybe make idempotent
 
 
 Questions:
-- design decisions about argparse, (should we collect info within command or subsequently)
+- //design decisions about argparse, (should we collect info within command or subsequently)
     python Sentry2Ranger.py 129.80.66.56 "InputFiles/scaj-INPUT-FILE.txt"
         or
     --> python Sentry2Ranger.py --input gg.txt 
   
-  ## then collect public ip & input file path later
+  //## then collect public ip & input file path later
   ---> provide optional input flag, otherwise go with the sentry side func
 
 - //does user need to provide input file at all, maybe give an option?
-- do we need to check if the entered user and pass work before we continue with program? how to check?
+- //do we need to check if the entered user and pass work before we continue with program? how to check?
 
 
 ---> add a flag for input file and provide path
@@ -211,7 +211,8 @@ Questions:
 
   
 
-129.80.66.56:6182
+
+150.136.204.120:6182
 admin
 OracleTeamUSA!123
 
@@ -229,5 +230,11 @@ curl -ivk  -u 'admin:OracleTeamUSA!123' -H "Content-Type: application/json" -X G
 
 TODO:
 
-- use urllib, requests, or subprocess instead of os module
+- //use urllib, requests, or subprocess instead of os module
 - 
+
+- //use try catch for wrong IP timeout
+
+- //clear inputfiles and have one file called sampleInput (make that the default)
+- //create a new log file everytime u run program
+- //add --d or delete flag which would clear policies from ranger
